@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using LiveCharts;
+
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 
@@ -28,6 +28,7 @@ namespace HoMMSpell
             InitializeComponent();
         }
     }
+    
     public class ViewModel
     {
             public ISeries[] Series { get; set; }
