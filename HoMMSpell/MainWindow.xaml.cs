@@ -31,35 +31,39 @@ namespace HoMMSpell
     public partial class MainWindow : Window
     {
 
-        public class NameList : ObservableCollection<Variable>
-        {
-            public NameList() : base() 
-            {
-                Add(new Variable(0, "SpellPower", "SP", 1));
-                Add(new Variable(1, "Knowledge", "KN", 1));
+        //public class NameList : ObservableCollection<Variable>
+        //{
+        //    public NameList() : base() 
+        //    {
+        //        Add(new Variable(0, "SpellPower", "SP", 1));
+        //        Add(new Variable(1, "Knowledge", "KN", 1));
 
-            }
-        }
+        //    }
+        //}
+        public ObservableCollection<Variable> variables;
         public MainWindow()
         {
             InitializeComponent();
 
-            //variables = new ObservableCollection<Variable>() 
+            variables = new ObservableCollection<Variable>()
+            {
+                new Variable(0,"SpellPower","SP",1),
+                new Variable(1, "Knowledge", "KN", 1)
+            };
+            //Добавляем ItemSource
+            Test.ItemsSource = variables;
+            Variables_Table.ItemsSource = variables;
+            //    ObservableCollection<Variable> variables = new ObservableCollection<Variable>()
             //{
             //    new Variable {Id=0, Name="SpellPower", Syn="SP", Value=1},
             //    new Variable {Id=1, Name="Knowledge", Syn="KN", Value=1}
             //};
-        //    ObservableCollection<Variable> variables = new ObservableCollection<Variable>()
-        //{
-        //    new Variable {Id=0, Name="SpellPower", Syn="SP", Value=1},
-        //    new Variable {Id=1, Name="Knowledge", Syn="KN", Value=1}
-        //};
             //Variables_Table.ItemsSource = variables;
-           
+
             //Variables_Table.ItemsSource = variables;
             
         }
-
+        
         
         
         
@@ -80,6 +84,13 @@ namespace HoMMSpell
         private void Var_Info_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Выберите уже имеющуюся переменную или добавьте свою.", "Переменные", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Create_Variable create_Variable = new Create_Variable(variables);
+            create_Variable.Owner = this;
+            create_Variable.Show();
         }
     }
 
