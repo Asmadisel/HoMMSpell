@@ -5,7 +5,9 @@
     xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF" xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="HoMMSpell.MainWindow"
     >
 
+    <Window.Resources>
 
+    </Window.Resources>
 
 
 
@@ -18,16 +20,16 @@
             </ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="4*"></ColumnDefinition>
-            
+
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.DataContext >
-            
+
             <local:ViewModel >
-                
+
             </local:ViewModel>
         </Grid.DataContext>
         <Grid x:Name="LeftBar" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2" Background="#FF695656">
@@ -40,8 +42,25 @@
             <GridSplitter Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ShowsPreview="True" Height="3" Background="#FF080000" Foreground="#FF060606" BorderBrush="#FF0E0909" HorizontalAlignment="Stretch"/>
 
             <Grid x:Name="Variables" Grid.Row="0" Grid.Column="0" Background="#FF5FAEC8">
-                <Label Content="Выберите элемент" HorizontalAlignment="Center" Margin="39,22,0,0" VerticalAlignment="Center"/>
-                <Button x:Name="Close" Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="20" MinHeight="20" Click="Close_Click" Margin="131,0,0,0"/>
+                <Label Content="Выберите элемент" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
+               
+                <Button x:Name="Close" Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="20" MinHeight="20" Click="Close_Click" Margin="0,0,0,0"/>
+                <Button x:Name="Var_Info" Content="?" HorizontalAlignment="Right" Height="20" VerticalAlignment="Bottom" Width="20" Margin="5,5,5,5" Click="Var_Info_Click"/>
+                <Grid x:Name="Var_Table" Margin="20,54,20,30" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" >
+                    <Border BorderBrush="Black" BorderThickness="1">
+                        <DataGrid x:Name="Variables_Table" CanUserResizeColumns="True" CanUserResizeRows="True" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn  Header="ID" Binding="{Binding ID}"></DataGridTextColumn>
+                                <DataGridTextColumn  Header="Переменная" Binding="{Binding Name}"></DataGridTextColumn>
+                                <DataGridTextColumn  Header="Синоним" Binding="{Binding Syn}"></DataGridTextColumn>
+                                <DataGridTextColumn  Header="Значение" Binding="{Binding Value}"></DataGridTextColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </Border>
+                </Grid>
+                <Button Content="Создать" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                <!--<DataGrid av:ItemsSource="{av:SampleData ItemCount=5}" HorizontalAlignment="Center" VerticalAlignment="Top" Height="101" Margin="0,58,0,0"/>-->
 
             </Grid>
             <Grid x:Name="Put" Grid.Row="2" Grid.Column="0" Background="#FFB12929">

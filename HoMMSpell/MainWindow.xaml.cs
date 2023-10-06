@@ -22,6 +22,7 @@ using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
 
+
 namespace HoMMSpell
 {
     /// <summary>
@@ -29,11 +30,39 @@ namespace HoMMSpell
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public class NameList : ObservableCollection<Variable>
+        {
+            public NameList() : base() 
+            {
+                Add(new Variable(0, "SpellPower", "SP", 1));
+                Add(new Variable(1, "Knowledge", "KN", 1));
+
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
+
+            //variables = new ObservableCollection<Variable>() 
+            //{
+            //    new Variable {Id=0, Name="SpellPower", Syn="SP", Value=1},
+            //    new Variable {Id=1, Name="Knowledge", Syn="KN", Value=1}
+            //};
+        //    ObservableCollection<Variable> variables = new ObservableCollection<Variable>()
+        //{
+        //    new Variable {Id=0, Name="SpellPower", Syn="SP", Value=1},
+        //    new Variable {Id=1, Name="Knowledge", Syn="KN", Value=1}
+        //};
+            //Variables_Table.ItemsSource = variables;
+           
+            //Variables_Table.ItemsSource = variables;
+            
         }
 
+        
+        
+        
         private void OpenSidebar_Button_Click(object sender, RoutedEventArgs e)
         {
             LeftBar.Visibility = Visibility.Visible;
@@ -47,11 +76,16 @@ namespace HoMMSpell
 
             OpenSidebar_Button.Visibility = Visibility.Visible;
         }
+
+        private void Var_Info_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Выберите уже имеющуюся переменную или добавьте свою.", "Переменные", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     public partial class ViewModel : ObservableObject
     {
-        private readonly Random _random = new();
+        private readonly Random _random = new(); 
         private readonly ObservableCollection<ObservableValue> _observableValues;
 
         public ViewModel()
