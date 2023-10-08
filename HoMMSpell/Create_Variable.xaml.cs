@@ -55,6 +55,8 @@ namespace HoMMSpell
                 //else { int f = (int)v; }
                 Variable vares = new Variable(id, n, s, (int)v);
                 _variables.Add(vares);
+                //Добавляем новую кнопку вниз
+                
                 this.Close();
             }
         }

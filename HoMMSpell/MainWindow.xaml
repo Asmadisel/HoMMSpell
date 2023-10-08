@@ -43,7 +43,7 @@
 
             <Grid x:Name="Variables" Grid.Row="0" Grid.Column="0" Background="#FF5FAEC8">
                 <Label Content="Выберите элемент" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
-               
+
                 <Button x:Name="Close" Content="X" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="20" MinHeight="20" Click="Close_Click" Margin="0,0,0,0"/>
                 <Button x:Name="Var_Info" Content="?" HorizontalAlignment="Right" Height="20" VerticalAlignment="Bottom" Width="20" Margin="5,5,5,5" Click="Var_Info_Click"/>
                 <Grid x:Name="Var_Table" Margin="20,54,20,30" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" >
@@ -64,8 +64,84 @@
 
             </Grid>
             <Grid x:Name="Put" Grid.Row="2" Grid.Column="0" Background="#FFB12929">
-                <Label Content="Ввод формулы" HorizontalAlignment="Center" Margin="39,22,0,0" VerticalAlignment="Center"/>
-                <Grid>
+                <StackPanel Margin="10,0,10,0">
+                    
+                <Label Content="Ввод формулы" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <!--На данный моммент выбирается элемент и знак (деления, умнож и т.д. -->
+                    <Grid>
+                        <!--При старте создаются 2 родных элемента, создание нового элемента добавляет в экспандер ещё один-->
+                        <Expander x:Name="InsertExpander" Header="Выбор элемента" IsExpanded="True" >
+                            <ListBox x:Name="AllVarList">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate >
+                                        <Grid Margin="0,0,0,5" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="100" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Name}" />
+
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        <!--<ItemsControl Name="AllVarList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="100" />
+                                        </Grid.ColumnDefinitions>
+                                        --><!--Создает кнопки соответственно элементу в коллекции-->
+                                            <!--<TextBlock Text="{Binding Path=(ItemsControl.AlternationIndex)}"/>--><!--
+                                        <Button Content="{Binding Name}" Click="Button_Click_1" />
+
+                                        </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>-->
+                            
+                            
+                                <!--<Button x:Name="InsertButtonSP" Content="a" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="40"/>
+                                <Button x:Name="InsertButtonKN" Content="a" HorizontalContentAlignment="Left" HorizontalAlignment="Left" MinWidth="40"/>-->
+                          
+
+                        </Expander>
+                    </Grid>
+                    <StackPanel x:Name="StackButtons" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <!--Кнопки: добавить существующую переменную, +, -, x, /, очистить-->
+                        <Button x:Name="AddPlus" Content="+" MinWidth="20" MinHeight="20" Click="AddPlus_Click"/>
+                        <Button x:Name="AddMinus" Content="-" MinWidth="20" MinHeight="20" Click="AddMinus_Click"/>
+                        <Button x:Name="AddMult" Content="X" MinWidth="20" MinHeight="20" Click="AddMult_Click"/>
+                        <Button x:Name="AddDivision" Content="÷" MinWidth="20" MinHeight="20" Click="AddDivision_Click"/>
+                    </StackPanel>
+
+
+                    <!--<TextBlock  HorizontalAlignment="Center" Height="19" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="92"/>-->
+
+
+                   
+                        <Label Content="Вывод" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"/>
+                    <TextBlock x:Name="PutBlock" MinWidth="30" MinHeight="30" Background="#33E2D3D3" VerticalAlignment="Center" Panel.ZIndex="-2" RenderTransformOrigin="0.5,0.5" TextWrapping="Wrap"/>
+
+                    <Label Content="Уровень:" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"/>
+                    <Slider x:Name="SlideLvl" Minimum="5" Maximum="40" IsSnapToTickEnabled="True" Ticks="5,10,15,20,25,30,35,40" TickPlacement="BottomRight" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Label Content="5" FontSize="8" HorizontalAlignment="Right"/>
+                        <Label Content="10" FontSize="8" HorizontalAlignment="Right"/>
+                        <Label Content="15" FontSize="8" HorizontalAlignment="Right"/>
+                        <Label Content="20" FontSize="8" HorizontalAlignment="Right"/>
+                        <Label Content="25" FontSize="8" HorizontalAlignment="Right"/>
+                        <Label Content="30" FontSize="8" HorizontalAlignment="Right"/>
+                        <Label Content="35" FontSize="8" HorizontalAlignment="Right"/>
+                        <Label Content="40" FontSize="8" HorizontalAlignment="Right"/>
+                    </StackPanel>                   
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button Content="Очистить" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click_2"/>
+                        <Button Content="Рассчитать" HorizontalAlignment="Right" Margin="10,0,2,0" HorizontalContentAlignment="Center" Command="{Binding RemoveSeriesCommand}" />
+                  
+                    </StackPanel>
                     <ListView x:Name="Test" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="80" MinHeight="40" ScrollViewer.VerticalScrollBarVisibility="Disabled" Visibility="Hidden">
                         <ListView.View>
                             <GridView >
@@ -77,8 +153,11 @@
                         </ListView.View>
                     </ListView>
 
-                </Grid>
-                
+
+                </StackPanel>
+
+
+
             </Grid>
 
         </Grid>
@@ -96,6 +175,7 @@
         <lvc:CartesianChart Grid.Column="2" Grid.Row="2"
         Series="{Binding Series}" Title="{Binding Title}"/>
         <Button x:Name="OpenSidebar_Button" Grid.Column="2" Content="»" HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="20" MinHeight="20" Visibility="Hidden" Click="OpenSidebar_Button_Click"/>
+
     </Grid>
 
 </Window>

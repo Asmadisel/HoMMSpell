@@ -53,6 +53,7 @@ namespace HoMMSpell
             //Добавляем ItemSource
             Test.ItemsSource = variables;
             Variables_Table.ItemsSource = variables;
+            AllVarList.ItemsSource = variables;
             //    ObservableCollection<Variable> variables = new ObservableCollection<Variable>()
             //{
             //    new Variable {Id=0, Name="SpellPower", Syn="SP", Value=1},
@@ -61,7 +62,7 @@ namespace HoMMSpell
             //Variables_Table.ItemsSource = variables;
 
             //Variables_Table.ItemsSource = variables;
-            
+
         }
         
         
@@ -92,12 +93,69 @@ namespace HoMMSpell
             create_Variable.Owner = this;
             create_Variable.Show();
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            //var f = e.
+            //string t = PutBlock.Text+"+" + f;
+            //PutBlock.Text = t;
+        }
+
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (AllVarList.SelectedIndex== -1)
+            {
+                int x = 0;
+                var eps = variables[x].Syn;
+                string t = PutBlock.Text + eps;
+                PutBlock.Text = t;
+            }
+            else
+            {
+                int x = AllVarList.SelectedIndex;
+                var eps = variables[x].Syn;
+                string t = PutBlock.Text + eps;
+                PutBlock.Text = t;
+            }
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            PutBlock.Text = null;
+        }
+
+        private void AddPlus_Click(object sender, RoutedEventArgs e)
+        {
+            string t = PutBlock.Text+"+";
+            PutBlock.Text = t;
+        }
+
+        private void AddMinus_Click(object sender, RoutedEventArgs e)
+        {
+            string t = PutBlock.Text+"-";
+            PutBlock.Text = t;
+        }
+
+        private void AddMult_Click(object sender, RoutedEventArgs e)
+        {
+            string t = PutBlock.Text+"*";
+            PutBlock.Text = t;
+        }
+
+        private void AddDivision_Click(object sender, RoutedEventArgs e)
+        {
+            string t = PutBlock.Text+"/";
+            PutBlock.Text = t;
+            
+        }
+
+       
     }
 
     public partial class ViewModel : ObservableObject
     {
         private readonly Random _random = new(); 
-        private readonly ObservableCollection<ObservableValue> _observableValues;
+        public readonly ObservableCollection<ObservableValue> _observableValues;
 
         public ViewModel()
         {
@@ -197,6 +255,11 @@ namespace HoMMSpell
             if (Series.Count == 1) return;
 
             Series.RemoveAt(Series.Count - 1);
+        }
+        [RelayCommand]
+        public void BuiltChartCommand()
+        {
+            if(_observableValues.Count == 0) return;
         }
     }
 }
