@@ -115,6 +115,7 @@
                         <Button x:Name="AddMinus" Content="-" MinWidth="20" MinHeight="20" Click="AddMinus_Click"/>
                         <Button x:Name="AddMult" Content="X" MinWidth="20" MinHeight="20" Click="AddMult_Click"/>
                         <Button x:Name="AddDivision" Content="÷" MinWidth="20" MinHeight="20" Click="AddDivision_Click"/>
+                        <Button x:Name="AddDLvl" Content="LvL" MinWidth="20" MinHeight="20" Click="AddDLvl_Click" />
                     </StackPanel>
 
 
@@ -123,10 +124,10 @@
 
                    
                         <Label Content="Вывод" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"/>
-                    <TextBlock x:Name="PutBlock" MinWidth="30" MinHeight="30" Background="#33E2D3D3" VerticalAlignment="Center" Panel.ZIndex="-2" RenderTransformOrigin="0.5,0.5" TextWrapping="Wrap"/>
+                    <TextBox x:Name="PutBlock" MinWidth="30" MinHeight="30" Background="#33E2D3D3" VerticalAlignment="Center" Panel.ZIndex="-2" RenderTransformOrigin="0.5,0.5" TextWrapping="Wrap" Text="{Binding PutBlockText}"/>
 
                     <Label Content="Уровень:" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"/>
-                    <Slider x:Name="SlideLvl" Minimum="5" Maximum="40" IsSnapToTickEnabled="True" Ticks="5,10,15,20,25,30,35,40" TickPlacement="BottomRight" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch"/>
+                    <Slider x:Name="SlideLvl" Minimum="5" Maximum="40" IsSnapToTickEnabled="True" Ticks="5,10,15,20,25,30,35,40" TickPlacement="BottomRight" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Value="{Binding ChartSize}"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <Label Content="5" FontSize="8" HorizontalAlignment="Right"/>
                         <Label Content="10" FontSize="8" HorizontalAlignment="Right"/>
@@ -138,8 +139,8 @@
                         <Label Content="40" FontSize="8" HorizontalAlignment="Right"/>
                     </StackPanel>                   
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                        <Button Content="Очистить" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Button_Click_2"/>
-                        <Button Content="Рассчитать" HorizontalAlignment="Right" Margin="10,0,2,0" HorizontalContentAlignment="Center" Command="{Binding RemoveSeriesCommand}" />
+                        <Button Content="Очистить" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding ClearChartCommand}"/>
+                        <Button Content="Рассчитать" HorizontalAlignment="Right" Margin="10,0,2,0" HorizontalContentAlignment="Center" Command="{Binding BuiltChartCommand}" Click="Button_Click_3" />
                   
                     </StackPanel>
                     <ListView x:Name="Test" VerticalAlignment="Center" HorizontalAlignment="Center" MinWidth="80" MinHeight="40" ScrollViewer.VerticalScrollBarVisibility="Disabled" Visibility="Hidden">

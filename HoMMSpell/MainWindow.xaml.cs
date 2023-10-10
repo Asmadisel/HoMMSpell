@@ -21,10 +21,11 @@ using SkiaSharp;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
-
+using System.Data;
 
 namespace HoMMSpell
 {
+    
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -54,6 +55,10 @@ namespace HoMMSpell
             Test.ItemsSource = variables;
             Variables_Table.ItemsSource = variables;
             AllVarList.ItemsSource = variables;
+
+            //Дататаба для чтения формулы, к нему конектим object value
+            DataTable dt = new DataTable();
+            
             //    ObservableCollection<Variable> variables = new ObservableCollection<Variable>()
             //{
             //    new Variable {Id=0, Name="SpellPower", Syn="SP", Value=1},
@@ -101,19 +106,21 @@ namespace HoMMSpell
             //PutBlock.Text = t;
         }
 
+
+        //Сейчас патблок выводит данные для формулы, необходимо заменить variablex.value на variables.syn
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (AllVarList.SelectedIndex== -1)
             {
                 int x = 0;
-                var eps = variables[x].Syn;
+                var eps = variables[x].Value;
                 string t = PutBlock.Text + eps;
                 PutBlock.Text = t;
             }
             else
             {
                 int x = AllVarList.SelectedIndex;
-                var eps = variables[x].Syn;
+                var eps = variables[x].Value;
                 string t = PutBlock.Text + eps;
                 PutBlock.Text = t;
             }
@@ -149,13 +156,45 @@ namespace HoMMSpell
             
         }
 
-       
+        private void AddDLvl_Click(object sender, RoutedEventArgs e)
+        {
+            string t = PutBlock.Text+"LvL";
+            PutBlock.Text = t;
+        }
+        //Метод расчета из патблока, необходимо сопоставить в формуле slider.value к lvl
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            if (PutBlock.Text == "" & PutBlock.Text == null) { return; }
+            else
+            {
+                string formula = PutBlock.Text;
+                DataTable dataTable = new DataTable();
+                int m = (int)SlideLvl.Value;
+                int[] values = new int[m];
+                string answer = "";
+                int lvl = 1;
+
+                foreach (int i in values)
+                {
+                    object result = dataTable.Compute(formula, "");
+                    answer= result.ToString();
+                    lvl++;
+                }
+                MessageBox.Show(answer);
+            }
+        }
     }
 
     public partial class ViewModel : ObservableObject
     {
         private readonly Random _random = new(); 
         public readonly ObservableCollection<ObservableValue> _observableValues;
+        public int ChartSize { get; set; }
+        //текст
+        public string? PutBlockText { get; set; }
+
+       
+        
 
         public ViewModel()
         {
@@ -256,10 +295,25 @@ namespace HoMMSpell
 
             Series.RemoveAt(Series.Count - 1);
         }
+        //Отложенная команда формирует новый график, сейчас - просто рандомное значение относительно выбранного на слайдере диапазона
         [RelayCommand]
-        public void BuiltChartCommand()
+        public void BuiltChart()
         {
-            if(_observableValues.Count == 0) return;
+            //if(_observableValues.Count == ChartSize) return;
+            _observableValues.Clear();
+            
+           for(int count =0; count <= ChartSize; count++)
+            {
+                var randomValue = _random.Next(1, 10);
+                _observableValues.Add(new(randomValue));
+            }
+        }
+
+        [RelayCommand]
+        public void ClearChart()
+        { 
+            
+            _observableValues.Clear(); 
         }
     }
 }
