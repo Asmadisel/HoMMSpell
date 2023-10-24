@@ -43,6 +43,7 @@ namespace HoMMSpell
         //    }
         //}
         public ObservableCollection<Variable> variables;
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -58,7 +59,7 @@ namespace HoMMSpell
             AllVarList.ItemsSource = variables;
 
             //Дататаба для чтения формулы, к нему конектим object value
-            DataTable dt = new DataTable();
+            //DataTable dt = new DataTable();
 
             //    ObservableCollection<Variable> variables = new ObservableCollection<Variable>()
             //{
@@ -71,6 +72,14 @@ namespace HoMMSpell
 
             //Инициализируем базовыеуровни в построении графика
             //LvlTextBox.Text = "1, 5, 10, 15, 20";
+
+            //Инициализируем значение для невидимого элемента
+            DecipheredBlock.Text = "0";
+
+            //Создадим новую коллекцию, в которой находятся только val из variables
+             
+                
+
         }
 
 
@@ -100,6 +109,7 @@ namespace HoMMSpell
             Create_Variable create_Variable = new Create_Variable(variables);
             create_Variable.Owner = this;
             create_Variable.Show();
+             
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -116,14 +126,14 @@ namespace HoMMSpell
             if (AllVarList.SelectedIndex== -1)
             {
                 int x = 0;
-                var eps = variables[x].Value;
+                var eps = variables[x].Syn;
                 string t = PutBlock.Text + eps;
                 PutBlock.Text = t;
             }
             else
             {
                 int x = AllVarList.SelectedIndex;
-                var eps = variables[x].Value;
+                var eps = variables[x].Syn;
                 string t = PutBlock.Text + eps;
                 PutBlock.Text = t;
             }
@@ -136,29 +146,29 @@ namespace HoMMSpell
 
         private void AddPlus_Click(object sender, RoutedEventArgs e)
         {
-            string t = PutBlock.Text+"+";
+            string t = PutBlock.Text+" + ";
             PutBlock.Text = t;
         }
 
         private void AddMinus_Click(object sender, RoutedEventArgs e)
         {
-            string t = PutBlock.Text+"-";
+            string t = PutBlock.Text+" - ";
             PutBlock.Text = t;
         }
 
         private void AddMult_Click(object sender, RoutedEventArgs e)
         {
-            string t = PutBlock.Text+"*";
+            string t = PutBlock.Text+" * ";
             PutBlock.Text = t;
         }
 
         private void AddDivision_Click(object sender, RoutedEventArgs e)
         {
-            string t = PutBlock.Text+"/";
+            string t = PutBlock.Text+" / ";
             PutBlock.Text = t;
             
         }
-
+        
         private void AddDLvl_Click(object sender, RoutedEventArgs e)
         {
             string t = PutBlock.Text+"LvL";
@@ -197,6 +207,47 @@ namespace HoMMSpell
         {
             
         }
+
+        //Метод ниже изменяет текст, обязательно наличие пробела между элементами - метод создает массив строк, которые уже потом конвертируются.
+        private void PutBlock_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //string value = PutBlock.Text.Replace("\r\n", "").Replace(" ", "");
+            var valueArray = PutBlock.Text.Split(' ');
+            var i = 0;
+
+            //Создаем коллекцию syn 
+            var synonims = from s in variables select s.Syn;
+            //Сопоставляем значения
+            
+            
+            foreach (var value in valueArray)
+            {
+                var str = value;
+
+                if (synonims.Contains(value))
+                {
+
+                    int index = synonims.Select((number, index) => new { number, index }).FirstOrDefault(item => item.number == value)?.index??-1;
+                    //str = variables[index].Value.ToString();
+                    str =  variables[index].Value.ToString() ;
+                    
+                    //MessageBox.Show($"Есть совпадение {index}");
+                    valueArray[i]=str;
+                }
+                else { 
+                    str = value;
+                    valueArray[i]=str;
+                    
+                }
+                i++;
+
+
+            }
+           
+
+            //Возможно, в конце стоит ставить [*][lvl], зависит от архитектуры
+            DecipheredBlock.Text = string.Join("", valueArray) ;
+        }
     }
 
     public partial class ViewModel : ObservableObject
@@ -208,9 +259,12 @@ namespace HoMMSpell
 
         //текст
         public string? PutBlockText { get; set; }
-        
-       
-        
+        //Здесь хранится введенная формула формата [][][][] - необходимо написать метод, который создает массив
+        public string? DecipheredFormula { get; set; } = "0";
+        //Почему в значение не попадает text? 
+
+
+
 
         public ViewModel()
         {
@@ -311,10 +365,21 @@ namespace HoMMSpell
 
             Series.RemoveAt(Series.Count - 1);
         }
+        //Метод, который принимает DecipheredFormula и убирает всё, кроме 0-9,+,-,/,* (string numberOnly = Regex.Replace(s, "[^0-9.]", ""))
+        public string mathFormula(string? value)
+        {
+            var output = Regex.Replace(value, "[^0-9.]", "");
+            return output;
+        }
+
+
         //Отложенная команда формирует новый график, сейчас - просто рандомное значение относительно выбранного на слайдере диапазона
         [RelayCommand]
         public void BuiltChart()
         {
+            //Получаем формулу
+           //string? formula =  mathFormula(DecipheredFormula);
+            MessageBox.Show($"{DecipheredFormula}");
             //string arr = ChartLvl;
             
             if (ChartLvl == null) return;
