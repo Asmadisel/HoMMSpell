@@ -22,6 +22,7 @@ using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Text.RegularExpressions;
 
 namespace HoMMSpell
 {
@@ -58,7 +59,7 @@ namespace HoMMSpell
 
             //Дататаба для чтения формулы, к нему конектим object value
             DataTable dt = new DataTable();
-            
+
             //    ObservableCollection<Variable> variables = new ObservableCollection<Variable>()
             //{
             //    new Variable {Id=0, Name="SpellPower", Syn="SP", Value=1},
@@ -68,11 +69,13 @@ namespace HoMMSpell
 
             //Variables_Table.ItemsSource = variables;
 
+            //Инициализируем базовыеуровни в построении графика
+            //LvlTextBox.Text = "1, 5, 10, 15, 20";
         }
-        
-        
-        
-        
+
+
+
+
         private void OpenSidebar_Button_Click(object sender, RoutedEventArgs e)
         {
             LeftBar.Visibility = Visibility.Visible;
@@ -162,26 +165,37 @@ namespace HoMMSpell
             PutBlock.Text = t;
         }
         //Метод расчета из патблока, необходимо сопоставить в формуле slider.value к lvl
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            if (PutBlock.Text == "" & PutBlock.Text == null) { return; }
-            else
-            {
-                string formula = PutBlock.Text;
-                DataTable dataTable = new DataTable();
-                int m = (int)SlideLvl.Value;
-                int[] values = new int[m];
-                string answer = "";
-                int lvl = 1;
+        //private void Button_Click_3(object sender, RoutedEventArgs e)
+        //{
+        //    if (PutBlock.Text == "" & PutBlock.Text == null) { return; }
+        //    else
+        //    {
+        //        string formula = PutBlock.Text;
+        //        DataTable dataTable = new DataTable();
+        //        int m = (int)SlideLvl.Value;
+        //        int[] values = new int[m];
+        //        string answer = "";
+        //        int lvl = 1;
 
-                foreach (int i in values)
-                {
-                    object result = dataTable.Compute(formula, "");
-                    answer= result.ToString();
-                    lvl++;
-                }
-                MessageBox.Show(answer);
-            }
+        //        foreach (int i in values)
+        //        {
+        //            object result = dataTable.Compute(formula, "");
+        //            answer= result.ToString();
+        //            lvl++;
+        //        }
+        //        MessageBox.Show(answer);
+        //    }
+        //}
+
+        private void LvlTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = new Regex("[^0-9,]+").IsMatch(e.Text);
+
+        }
+
+        private void LvlTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
         }
     }
 
@@ -189,10 +203,12 @@ namespace HoMMSpell
     {
         private readonly Random _random = new(); 
         public readonly ObservableCollection<ObservableValue> _observableValues;
-        public int ChartSize { get; set; }
+        //public int ChartSize { get; set; }
+        public string? ChartLvl { get; set; } = "1, 5, 10, 15, 20";
+
         //текст
         public string? PutBlockText { get; set; }
-
+        
        
         
 
@@ -299,14 +315,29 @@ namespace HoMMSpell
         [RelayCommand]
         public void BuiltChart()
         {
-            //if(_observableValues.Count == ChartSize) return;
-            _observableValues.Clear();
+            //string arr = ChartLvl;
             
-           for(int count =0; count <= ChartSize; count++)
+            if (ChartLvl == null) return;
+            string form = ChartLvl.Replace(" ", "");
+            
+            int[] array = form.Split(new[] {',', ' '}).Select(n => Convert.ToInt32(n)).ToArray();
+            if (array.Length == 0) { MessageBox.Show("Введите значение"); }
+            else if (array.Length == _observableValues.Count) return;
+            _observableValues.Clear();
+
+            foreach (int i in array)
             {
-                var randomValue = _random.Next(1, 10);
-                _observableValues.Add(new(randomValue));
+                var value = i;
+                _observableValues.Add(new(value));
             }
+           // //if(_observableValues.Count == ChartSize) return;
+           // _observableValues.Clear();
+            
+           //for(int count =0; count <= ChartSize; count++)
+           // {
+           //     var randomValue = _random.Next(1, 10);
+           //     _observableValues.Add(new(randomValue));
+           // }
         }
 
         [RelayCommand]
