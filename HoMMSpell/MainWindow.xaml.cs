@@ -12,11 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using LiveChartsCore.SkiaSharpView.VisualElements;
 using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using SkiaSharp;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore.Defaults;
@@ -264,9 +264,41 @@ namespace HoMMSpell
         public string? DecipheredFormula 
         {
             get; set;
-        } 
+        }
+        //Логика, пореределяющая стиль и дизайн осей x y 
+        public Axis[] XAxes { get; set; }
+            = new Axis[]
+            {
+                new Axis
+                {
+                    Name = "X Axis",
+                    NamePaint = new SolidColorPaint(SKColors.Black),
+
+                    LabelsPaint = new SolidColorPaint(SKColors.Blue),
+                    TextSize = 20,
+                    //Граница сепарации
+                    //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }
+                }
+            };
+        public Axis[] YAxes { get; set; }
+            = new Axis[]
+            {
+                new Axis
+                {
+                    Name = "Y Axis",
+                    NamePaint = new SolidColorPaint(SKColors.Black),
+
+                    LabelsPaint = new SolidColorPaint(SKColors.Blue),
+                    TextSize = 20,
+                    //Граница сепарации
+                    //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }
+                }
+            };
+
         //Почему в значение не попадает text? 
 
+        
+        
 
 
 
@@ -301,11 +333,23 @@ namespace HoMMSpell
             }
         };
 
+
             // in the following sample notice that the type int does not implement INotifyPropertyChanged
             // and our Series.Values property is of type List<T>
             // List<T> does not implement INotifyCollectionChanged
             // this means the following series is not listening for changes.
             // Series.Add(new ColumnSeries<int> { Values = new List<int> { 2, 4, 6, 1, 7, -2 } }); 
+
+            //Создание массива данных вводимых точ
+            string form = ChartLvl.Replace(" ", "");
+
+            string[] array = form.Split(new[] { ',', ' ' }).Select(n => Convert.ToString(n)).ToArray();
+            //Логика названия x оси - сюда нужно передавать коллекцию значений
+            XAxes[0] = new Axis
+            {
+                Labels = array
+            };
+
         }
 
         public ObservableCollection<ISeries> Series { get; set; }
@@ -381,9 +425,10 @@ namespace HoMMSpell
         [RelayCommand]
         public void BuiltChart()
         {
+            ClearChart();
             //Получаем формулу
            //string? formula =  mathFormula(DecipheredFormula);
-            MessageBox.Show($"{DecipheredFormula}");
+            //MessageBox.Show($"{DecipheredFormula}");
             //string arr = ChartLvl;
             bool hasLetters = DecipheredFormula.AsEnumerable().Any(ch => char.IsLetter(ch));
             if(hasLetters == true)
@@ -399,7 +444,7 @@ namespace HoMMSpell
             dataTable.Rows.Add(0);
             double result = (double)(dataTable.Rows[0]["DecipheredFormula"]);
 
-            MessageBox.Show(result.ToString());
+            //MessageBox.Show(result.ToString());
 
             if (ChartLvl == null) return;
             string form = ChartLvl.Replace(" ", "");
