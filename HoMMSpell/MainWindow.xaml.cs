@@ -23,6 +23,7 @@ using LiveChartsCore.Defaults;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace HoMMSpell
 {
@@ -212,7 +213,7 @@ namespace HoMMSpell
         private void PutBlock_TextChanged(object sender, TextChangedEventArgs e)
         {
             //string value = PutBlock.Text.Replace("\r\n", "").Replace(" ", "");
-            var valueArray = PutBlock.Text.Split(' ');
+            var valueArray = PutBlock.Text.ToUpper().Split(' ');
             var i = 0;
 
             //Создаем коллекцию syn 
@@ -250,7 +251,7 @@ namespace HoMMSpell
         }
     }
 
-    public partial class ViewModel : ObservableObject
+    public partial class ViewModel : ObservableObject, INotifyPropertyChanged
     {
         private readonly Random _random = new(); 
         public readonly ObservableCollection<ObservableValue> _observableValues;
@@ -260,7 +261,10 @@ namespace HoMMSpell
         //текст
         public string? PutBlockText { get; set; }
         //Здесь хранится введенная формула формата [][][][] - необходимо написать метод, который создает массив
-        public string? DecipheredFormula { get; set; } = "0";
+        public string? DecipheredFormula 
+        {
+            get; set;
+        } 
         //Почему в значение не попадает text? 
 
 
@@ -381,18 +385,33 @@ namespace HoMMSpell
            //string? formula =  mathFormula(DecipheredFormula);
             MessageBox.Show($"{DecipheredFormula}");
             //string arr = ChartLvl;
-            
+            bool hasLetters = DecipheredFormula.AsEnumerable().Any(ch => char.IsLetter(ch));
+            if(hasLetters == true)
+            {
+                MessageBox.Show("В выражении есть буквы, проверь");
+                return;
+            }
+            //Используем DataTable
+            DataTable dataTable= new DataTable();
+            //Создаем первую колонку
+            DataColumn column = new DataColumn("DecipheredFormula", typeof(double), DecipheredFormula);
+            dataTable.Columns.Add(column);
+            dataTable.Rows.Add(0);
+            double result = (double)(dataTable.Rows[0]["DecipheredFormula"]);
+
+            MessageBox.Show(result.ToString());
+
             if (ChartLvl == null) return;
             string form = ChartLvl.Replace(" ", "");
             
-            int[] array = form.Split(new[] {',', ' '}).Select(n => Convert.ToInt32(n)).ToArray();
+            double[] array = form.Split(new[] {',', ' '}).Select(n => Convert.ToDouble(n)).ToArray();
             if (array.Length == 0) { MessageBox.Show("Введите значение"); }
             else if (array.Length == _observableValues.Count) return;
             _observableValues.Clear();
 
-            foreach (int i in array)
+            foreach (double i in array)
             {
-                var value = i;
+                var value = result * i;
                 _observableValues.Add(new(value));
             }
            // //if(_observableValues.Count == ChartSize) return;

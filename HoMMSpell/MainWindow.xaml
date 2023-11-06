@@ -126,7 +126,7 @@
                         <Label Content="Вывод" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"/>
                     <TextBox x:Name="PutBlock" MinWidth="30" MinHeight="30" Background="#33E2D3D3" VerticalAlignment="Center" Panel.ZIndex="-2" RenderTransformOrigin="0.5,0.5" TextWrapping="Wrap" Text="{Binding PutBlockText}" TextChanged="PutBlock_TextChanged"/>
   <!-- Ниже находится в будущем скрываемый текстблок, в котором находится расшифрованная формула из putblock-->
-                    <TextBlock x:Name="DecipheredBlock" Text="{Binding DecipheredFormula}"></TextBlock>
+                    <TextBlock x:Name="DecipheredBlock" Text="{Binding DecipheredFormula, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
                     <Label Content="Уровень:" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1"/>
 
                     <TextBox x:Name="LvlTextBox" PreviewTextInput="LvlTextBox_PreviewTextInput" Text="{Binding ChartLvl}" TextChanged="LvlTextBox_TextChanged" ></TextBox>
